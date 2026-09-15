@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -23,7 +24,7 @@ func twoSum(nums []int, target int) []int {
 	return res
 }
 func main() {
-	nums := []int{6, -4, 3, 1, 4}
+	nums := []int{6, -4, 3, 1, 4, 2}
 	target := 2
 	fmt.Println(twoSum(nums, target))
 }
