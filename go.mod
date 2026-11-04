@@ -1,6 +1,6 @@
 module VK_golang_hw
 
-go 1.27.1
+go 1.26.4
 
 require (
 	github.com/swaggest/swgui v1.8.9
