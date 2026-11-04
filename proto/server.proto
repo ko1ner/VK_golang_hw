@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package movie;
+
+option go_package = "VK_golang_hw/proto;moviepb";
+
+service MovieService {
+    rpc LoadMovies(LoadMoviesRequest) returns (LoadMoviesResponse);
+    rpc GetLastMovie(GetLastMovieRequest) returns (Movie);
+}
+
+message Movie {
+    int64 id = 1;
+    string title = 2;
+    int32 year = 3;
+    string director = 4;
+}
+
+message LoadMoviesRequest {
+    int64 from = 1;
+    int64 to = 2;
+}
+
+message LoadMoviesResponse {
+    repeated Movie movies = 1;
+    repeated string partial_errors = 2;
+}
+
+message GetLastMovieRequest {}

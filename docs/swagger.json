@@ -1,0 +1,133 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Movie Service",
+    "description": "HTTP API for loading movies from the external movie stand.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/load-movies": {
+      "get": {
+        "summary": "Load movies by ID range",
+        "operationId": "loadMovies",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "First movie ID (inclusive), must be >= 1",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "Last movie ID (inclusive), must be >= from",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "example": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON array of movies found in the requested range",
+            "headers": {
+              "X-Partial-Errors": {
+                "description": "Semicolon-separated list of IDs that were missing on the stand",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid 'from' or 'to' parameter"
+          },
+          "502": {
+            "description": "Movie stand is unavailable or returned an error"
+          },
+          "504": {
+            "description": "Movie stand did not respond within the timeout"
+          }
+        }
+      }
+    },
+    "/last-movie": {
+      "get": {
+        "summary": "Get the last movie available on the stand",
+        "operationId": "lastMovie",
+        "responses": {
+          "200": {
+            "description": "The movie with the highest ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No movies found"
+          },
+          "502": {
+            "description": "Movie stand is unavailable or returned an error"
+          },
+          "504": {
+            "description": "Movie stand did not respond within the timeout"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1000
+          },
+          "title": {
+            "type": "string",
+            "example": "Moscow Does Not Believe in Tears"
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1980
+          },
+          "director": {
+            "type": "string",
+            "example": "Vladimir Menshov"
+          }
+        }
+      }
+    }
+  }
+}
